@@ -1,17 +1,17 @@
 import { useState } from "react";
-import { 
-  Folder, 
-  FileText, 
-  Upload, 
-  Search, 
-  Filter, 
-  Download, 
-  Share, 
+import {
+  Folder,
+  FileText,
+  Upload,
+  Search,
+  Filter,
+  Download,
+  Share,
   MoreHorizontal,
   Eye,
   Tag,
   Calendar,
-  User
+  User,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -40,18 +40,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useNavigate } from "react-router-dom";
 
 export default function DocumentLibrary() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFolder, setSelectedFolder] = useState("all");
   const [selectedType, setSelectedType] = useState("all");
+  const navigate = useNavigate();
 
   const folders = [
     { id: "all", name: "All Documents", count: 45 },
     { id: "meetings", name: "Meeting Documents", count: 18 },
     { id: "financial", name: "Financial Reports", count: 12 },
     { id: "legal", name: "Legal & Compliance", count: 8 },
-    { id: "governance", name: "Governance", count: 7 }
+    { id: "governance", name: "Governance", count: 7 },
   ];
 
   const documents = [
@@ -67,7 +69,7 @@ export default function DocumentLibrary() {
       accessCount: 15,
       tags: ["Q4", "Financial", "Board"],
       folder: "financial",
-      isConfidential: true
+      isConfidential: true,
     },
     {
       id: 2,
@@ -81,7 +83,7 @@ export default function DocumentLibrary() {
       accessCount: 8,
       tags: ["Legal", "Resolution", "Draft"],
       folder: "legal",
-      isConfidential: true
+      isConfidential: true,
     },
     {
       id: 3,
@@ -95,7 +97,7 @@ export default function DocumentLibrary() {
       accessCount: 22,
       tags: ["Strategy", "2025", "Planning"],
       folder: "governance",
-      isConfidential: false
+      isConfidential: false,
     },
     {
       id: 4,
@@ -109,7 +111,7 @@ export default function DocumentLibrary() {
       accessCount: 12,
       tags: ["Audit", "Committee", "Report"],
       folder: "meetings",
-      isConfidential: true
+      isConfidential: true,
     },
     {
       id: 5,
@@ -123,15 +125,21 @@ export default function DocumentLibrary() {
       accessCount: 18,
       tags: ["Minutes", "November", "Board"],
       folder: "meetings",
-      isConfidential: false
-    }
+      isConfidential: false,
+    },
   ];
 
-  const filteredDocuments = documents.filter(doc => {
-    const matchesSearch = doc.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         doc.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
-    const matchesFolder = selectedFolder === "all" || doc.folder === selectedFolder;
-    const matchesType = selectedType === "all" || doc.type.toLowerCase() === selectedType.toLowerCase();
+  const filteredDocuments = documents.filter((doc) => {
+    const matchesSearch =
+      doc.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      doc.tags.some((tag) =>
+        tag.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    const matchesFolder =
+      selectedFolder === "all" || doc.folder === selectedFolder;
+    const matchesType =
+      selectedType === "all" ||
+      doc.type.toLowerCase() === selectedType.toLowerCase();
     return matchesSearch && matchesFolder && matchesType;
   });
 
@@ -141,11 +149,15 @@ export default function DocumentLibrary() {
 
   return (
     <div className="space-y-6">
-      <PageHeader 
-        title="Document Library" 
+      <PageHeader
+        title="Document Library"
         description="Centralized repository for all board documents and files"
       >
-        <Button>
+        <Button
+          onClick={() => {
+            navigate("/documents/create");
+          }}
+        >
           <Upload className="w-4 h-4 mr-2" />
           Upload Documents
         </Button>
@@ -167,8 +179,8 @@ export default function DocumentLibrary() {
                   key={folder.id}
                   onClick={() => setSelectedFolder(folder.id)}
                   className={`w-full flex items-center justify-between p-2 rounded-lg text-left transition-colors ${
-                    selectedFolder === folder.id 
-                      ? "bg-primary-light text-primary" 
+                    selectedFolder === folder.id
+                      ? "bg-primary-light text-primary"
                       : "hover:bg-muted"
                   }`}
                 >
@@ -222,7 +234,8 @@ export default function DocumentLibrary() {
                 Documents ({filteredDocuments.length})
                 {selectedFolder !== "all" && (
                   <span className="text-muted-foreground font-normal">
-                    {" "}in {folders.find(f => f.id === selectedFolder)?.name}
+                    {" "}
+                    in {folders.find((f) => f.id === selectedFolder)?.name}
                   </span>
                 )}
               </CardTitle>
@@ -240,7 +253,10 @@ export default function DocumentLibrary() {
                 </TableHeader>
                 <TableBody>
                   {filteredDocuments.map((doc) => (
-                    <TableRow key={doc.id} className="cursor-pointer hover:bg-muted/50">
+                    <TableRow
+                      key={doc.id}
+                      className="cursor-pointer hover:bg-muted/50"
+                    >
                       <TableCell>
                         <div className="flex items-start gap-3">
                           {getFileIcon(doc.type)}
@@ -248,7 +264,10 @@ export default function DocumentLibrary() {
                             <div className="flex items-center gap-2">
                               <span className="font-medium">{doc.name}</span>
                               {doc.isConfidential && (
-                                <Badge variant="outline" className="text-xs bg-warning-light text-warning">
+                                <Badge
+                                  variant="outline"
+                                  className="text-xs bg-warning-light text-warning"
+                                >
                                   Confidential
                                 </Badge>
                               )}
@@ -258,7 +277,11 @@ export default function DocumentLibrary() {
                             </div>
                             <div className="flex flex-wrap gap-1 mt-1">
                               {doc.tags.slice(0, 3).map((tag) => (
-                                <Badge key={tag} variant="outline" className="text-xs">
+                                <Badge
+                                  key={tag}
+                                  variant="outline"
+                                  className="text-xs"
+                                >
                                   <Tag className="w-3 h-3 mr-1" />
                                   {tag}
                                 </Badge>

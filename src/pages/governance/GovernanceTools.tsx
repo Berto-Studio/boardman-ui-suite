@@ -1,19 +1,24 @@
 import { useState } from "react";
-import { Shield, FileCheck, Users, AlertTriangle, TrendingUp, CheckCircle } from "lucide-react";
+import {
+  Shield,
+  FileCheck,
+  Users,
+  AlertTriangle,
+  TrendingUp,
+  CheckCircle,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { StatusBadge } from "@/components/shared/StatusBadge";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useNavigate } from "react-router-dom";
 
 export default function GovernanceTools() {
+  const navigate = useNavigate();
+
   const evaluations = [
     {
       id: 1,
@@ -24,7 +29,7 @@ export default function GovernanceTools() {
       completionRate: 75,
       participants: 8,
       totalParticipants: 8,
-      lastUpdated: "2024-12-11"
+      lastUpdated: "2024-12-11",
     },
     {
       id: 2,
@@ -35,7 +40,7 @@ export default function GovernanceTools() {
       completionRate: 25,
       participants: 2,
       totalParticipants: 8,
-      lastUpdated: "2024-12-08"
+      lastUpdated: "2024-12-08",
     },
     {
       id: 3,
@@ -46,8 +51,8 @@ export default function GovernanceTools() {
       completionRate: 100,
       participants: 5,
       totalParticipants: 5,
-      lastUpdated: "2024-11-29"
-    }
+      lastUpdated: "2024-11-29",
+    },
   ];
 
   const conflictDisclosures = [
@@ -59,7 +64,7 @@ export default function GovernanceTools() {
       status: "disclosed" as const,
       dateDisclosed: "2024-12-01",
       reviewStatus: "approved",
-      riskLevel: "medium"
+      riskLevel: "medium",
     },
     {
       id: 2,
@@ -69,7 +74,7 @@ export default function GovernanceTools() {
       status: "pending" as const,
       dateDisclosed: "2024-12-10",
       reviewStatus: "under-review",
-      riskLevel: "low"
+      riskLevel: "low",
     },
     {
       id: 3,
@@ -79,8 +84,8 @@ export default function GovernanceTools() {
       status: "disclosed" as const,
       dateDisclosed: "2024-11-15",
       reviewStatus: "approved",
-      riskLevel: "high"
-    }
+      riskLevel: "high",
+    },
   ];
 
   const policies = [
@@ -93,7 +98,7 @@ export default function GovernanceTools() {
       status: "current" as const,
       acknowledgments: 8,
       totalRequired: 8,
-      category: "Governance"
+      category: "Governance",
     },
     {
       id: 2,
@@ -104,7 +109,7 @@ export default function GovernanceTools() {
       status: "current" as const,
       acknowledgments: 7,
       totalRequired: 8,
-      category: "Ethics"
+      category: "Ethics",
     },
     {
       id: 3,
@@ -115,7 +120,7 @@ export default function GovernanceTools() {
       status: "pending" as const,
       acknowledgments: 3,
       totalRequired: 8,
-      category: "Ethics"
+      category: "Ethics",
     },
     {
       id: 4,
@@ -126,8 +131,8 @@ export default function GovernanceTools() {
       status: "draft" as const,
       acknowledgments: 0,
       totalRequired: 8,
-      category: "Risk"
-    }
+      category: "Risk",
+    },
   ];
 
   const getRiskLevelColor = (level: string) => {
@@ -145,8 +150,8 @@ export default function GovernanceTools() {
 
   return (
     <div className="space-y-6">
-      <PageHeader 
-        title="Governance Tools" 
+      <PageHeader
+        title="Governance Tools"
         description="Manage board evaluations, conflicts of interest, and governance policies"
       />
 
@@ -160,8 +165,14 @@ export default function GovernanceTools() {
         {/* Evaluations Tab */}
         <TabsContent value="evaluations" className="space-y-6">
           <div className="flex justify-between items-center">
-            <h3 className="text-lg font-semibold">Board & Individual Evaluations</h3>
-            <Button>
+            <h3 className="text-lg font-semibold">
+              Board & Individual Evaluations
+            </h3>
+            <Button
+              onClick={() => {
+                navigate("/governance/create");
+              }}
+            >
               <Shield className="w-4 h-4 mr-2" />
               Create Evaluation
             </Button>
@@ -173,7 +184,9 @@ export default function GovernanceTools() {
                 <CardHeader>
                   <div className="flex items-start justify-between">
                     <div>
-                      <CardTitle className="text-base">{evaluation.title}</CardTitle>
+                      <CardTitle className="text-base">
+                        {evaluation.title}
+                      </CardTitle>
                       <Badge variant="outline" className="mt-2">
                         {evaluation.type}
                       </Badge>
@@ -189,24 +202,29 @@ export default function GovernanceTools() {
                     </div>
                     <Progress value={evaluation.completionRate} />
                     <div className="text-xs text-muted-foreground">
-                      {evaluation.participants}/{evaluation.totalParticipants} participants
+                      {evaluation.participants}/{evaluation.totalParticipants}{" "}
+                      participants
                     </div>
                   </div>
-                  
+
                   <div className="text-sm space-y-1">
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Due Date:</span>
                       <span>{evaluation.dueDate}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">Last Updated:</span>
+                      <span className="text-muted-foreground">
+                        Last Updated:
+                      </span>
                       <span>{evaluation.lastUpdated}</span>
                     </div>
                   </div>
-                  
+
                   <div className="flex gap-2">
                     <Button size="sm" className="flex-1">
-                      {evaluation.status === "completed" ? "View Results" : "Continue"}
+                      {evaluation.status === "completed"
+                        ? "View Results"
+                        : "Continue"}
                     </Button>
                     <Button size="sm" variant="outline">
                       Details
@@ -221,7 +239,9 @@ export default function GovernanceTools() {
         {/* Conflicts of Interest Tab */}
         <TabsContent value="conflicts" className="space-y-6">
           <div className="flex justify-between items-center">
-            <h3 className="text-lg font-semibold">Conflict of Interest Disclosures</h3>
+            <h3 className="text-lg font-semibold">
+              Conflict of Interest Disclosures
+            </h3>
             <Button>
               <AlertTriangle className="w-4 h-4 mr-2" />
               New Disclosure
@@ -239,7 +259,7 @@ export default function GovernanceTools() {
                         {disclosure.type}
                       </Badge>
                     </div>
-                    
+
                     <div className="md:col-span-2">
                       <p className="text-sm text-muted-foreground">
                         {disclosure.description}
@@ -248,15 +268,21 @@ export default function GovernanceTools() {
                         <span className="text-xs text-muted-foreground">
                           Disclosed: {disclosure.dateDisclosed}
                         </span>
-                        <Badge className={getRiskLevelColor(disclosure.riskLevel)}>
+                        <Badge
+                          className={getRiskLevelColor(disclosure.riskLevel)}
+                        >
                           {disclosure.riskLevel.toUpperCase()} RISK
                         </Badge>
                       </div>
                     </div>
-                    
+
                     <div className="flex flex-col items-end gap-2">
-                      <StatusBadge 
-                        status={disclosure.status === "disclosed" ? "completed" : "pending"} 
+                      <StatusBadge
+                        status={
+                          disclosure.status === "disclosed"
+                            ? "completed"
+                            : "pending"
+                        }
                       />
                       <div className="text-xs text-muted-foreground">
                         {disclosure.reviewStatus}
@@ -275,7 +301,9 @@ export default function GovernanceTools() {
         {/* Policy Management Tab */}
         <TabsContent value="policies" className="space-y-6">
           <div className="flex justify-between items-center">
-            <h3 className="text-lg font-semibold">Governance Policies & Documents</h3>
+            <h3 className="text-lg font-semibold">
+              Governance Policies & Documents
+            </h3>
             <Button>
               <FileCheck className="w-4 h-4 mr-2" />
               Upload Policy
@@ -288,41 +316,61 @@ export default function GovernanceTools() {
                 <CardHeader>
                   <div className="flex items-start justify-between">
                     <div>
-                      <CardTitle className="text-base">{policy.title}</CardTitle>
+                      <CardTitle className="text-base">
+                        {policy.title}
+                      </CardTitle>
                       <div className="flex items-center gap-2 mt-2">
                         <Badge variant="outline">{policy.category}</Badge>
                         <Badge variant="outline">{policy.version}</Badge>
                       </div>
                     </div>
-                    <StatusBadge status={policy.status === "current" ? "active" : policy.status as any} />
+                    <StatusBadge
+                      status={
+                        policy.status === "current"
+                          ? "active"
+                          : (policy.status as any)
+                      }
+                    />
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
                       <span>Acknowledgments</span>
-                      <span>{policy.acknowledgments}/{policy.totalRequired}</span>
+                      <span>
+                        {policy.acknowledgments}/{policy.totalRequired}
+                      </span>
                     </div>
-                    <Progress value={(policy.acknowledgments / policy.totalRequired) * 100} />
+                    <Progress
+                      value={
+                        (policy.acknowledgments / policy.totalRequired) * 100
+                      }
+                    />
                   </div>
-                  
+
                   <div className="text-sm space-y-1">
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">Last Updated:</span>
+                      <span className="text-muted-foreground">
+                        Last Updated:
+                      </span>
                       <span>{policy.lastUpdated}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">Next Review:</span>
+                      <span className="text-muted-foreground">
+                        Next Review:
+                      </span>
                       <span>{policy.nextReview}</span>
                     </div>
                   </div>
-                  
+
                   <div className="flex gap-2">
                     <Button size="sm" className="flex-1">
                       View Policy
                     </Button>
                     <Button size="sm" variant="outline">
-                      {policy.acknowledgments < policy.totalRequired ? "Acknowledge" : "Acknowledged"}
+                      {policy.acknowledgments < policy.totalRequired
+                        ? "Acknowledge"
+                        : "Acknowledged"}
                     </Button>
                   </div>
                 </CardContent>

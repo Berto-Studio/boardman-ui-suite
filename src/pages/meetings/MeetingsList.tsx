@@ -1,5 +1,15 @@
 import { useState } from "react";
-import { Calendar, Clock, Users, Plus, Filter, Search, Video, FileText, MoreHorizontal } from "lucide-react";
+import {
+  Calendar,
+  Clock,
+  Users,
+  Plus,
+  Filter,
+  Search,
+  Video,
+  FileText,
+  MoreHorizontal,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -27,10 +37,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useNavigate } from "react-router-dom";
 
 export default function MeetingsList() {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const navigate = useNavigate();
 
   const meetings = [
     {
@@ -46,7 +58,7 @@ export default function MeetingsList() {
       status: "active" as const,
       documentsCount: 5,
       chairperson: "John Doe",
-      secretary: "Sarah Chen"
+      secretary: "Sarah Chen",
     },
     {
       id: 2,
@@ -61,14 +73,14 @@ export default function MeetingsList() {
       status: "pending" as const,
       documentsCount: 3,
       chairperson: "Michael Brown",
-      secretary: "Emma Wilson"
+      secretary: "Emma Wilson",
     },
     {
       id: 3,
       title: "Strategic Planning Session",
       type: "Planning",
       date: "2024-12-18",
-      time: "13:00", 
+      time: "13:00",
       duration: "3 hours",
       attendees: 12,
       location: "Executive Boardroom",
@@ -76,7 +88,7 @@ export default function MeetingsList() {
       status: "draft" as const,
       documentsCount: 8,
       chairperson: "John Doe",
-      secretary: "Sarah Chen"
+      secretary: "Sarah Chen",
     },
     {
       id: 4,
@@ -91,24 +103,30 @@ export default function MeetingsList() {
       status: "completed" as const,
       documentsCount: 2,
       chairperson: "John Doe",
-      secretary: "Sarah Chen"
-    }
+      secretary: "Sarah Chen",
+    },
   ];
 
-  const filteredMeetings = meetings.filter(meeting => {
-    const matchesSearch = meeting.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         meeting.type.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesStatus = statusFilter === "all" || meeting.status === statusFilter;
+  const filteredMeetings = meetings.filter((meeting) => {
+    const matchesSearch =
+      meeting.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      meeting.type.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesStatus =
+      statusFilter === "all" || meeting.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
 
   return (
     <div className="space-y-6">
-      <PageHeader 
-        title="Meetings" 
+      <PageHeader
+        title="Meetings"
         description="Schedule and manage board meetings and committee sessions"
       >
-        <Button>
+        <Button
+          onClick={() => {
+            navigate("/meetings/create");
+          }}
+        >
           <Plus className="w-4 h-4 mr-2" />
           Schedule Meeting
         </Button>
@@ -164,7 +182,10 @@ export default function MeetingsList() {
             </TableHeader>
             <TableBody>
               {filteredMeetings.map((meeting) => (
-                <TableRow key={meeting.id} className="cursor-pointer hover:bg-muted/50">
+                <TableRow
+                  key={meeting.id}
+                  className="cursor-pointer hover:bg-muted/50"
+                >
                   <TableCell>
                     <div>
                       <div className="font-medium">{meeting.title}</div>
@@ -182,7 +203,9 @@ export default function MeetingsList() {
                     </div>
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
                       <Clock className="w-4 h-4" />
-                      <span>{meeting.time} ({meeting.duration})</span>
+                      <span>
+                        {meeting.time} ({meeting.duration})
+                      </span>
                     </div>
                   </TableCell>
                   <TableCell>
@@ -212,7 +235,13 @@ export default function MeetingsList() {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        <DropdownMenuItem>View Details</DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => {
+                            navigate("/meetings/details/1");
+                          }}
+                        >
+                          View Details
+                        </DropdownMenuItem>
                         <DropdownMenuItem>Edit Meeting</DropdownMenuItem>
                         {meeting.videoLink && (
                           <DropdownMenuItem>

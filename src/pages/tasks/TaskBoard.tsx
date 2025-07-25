@@ -1,10 +1,18 @@
 import { useState } from "react";
-import { Plus, Calendar, User, MessageSquare, Paperclip, Flag } from "lucide-react";
+import {
+  Plus,
+  Calendar,
+  User,
+  MessageSquare,
+  Paperclip,
+  Flag,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useNavigate } from "react-router-dom";
 
 interface Task {
   id: number;
@@ -25,18 +33,20 @@ interface Task {
 }
 
 export default function TaskBoard() {
+  const navigate = useNavigate();
   const [tasks] = useState<Task[]>([
     {
       id: 1,
       title: "Review Q4 Financial Statements",
-      description: "Complete review of quarterly financial statements before board meeting",
+      description:
+        "Complete review of quarterly financial statements before board meeting",
       assignee: { id: "1", name: "Sarah Chen", initials: "SC" },
       dueDate: "2024-12-15",
       priority: "high",
       comments: 3,
       attachments: 2,
       tags: ["Financial", "Review"],
-      status: "todo"
+      status: "todo",
     },
     {
       id: 2,
@@ -48,19 +58,20 @@ export default function TaskBoard() {
       comments: 1,
       attachments: 0,
       tags: ["Governance", "Compliance"],
-      status: "todo"
+      status: "todo",
     },
     {
       id: 3,
       title: "Update Board Policies",
-      description: "Review and update board policies in accordance with new regulations",
+      description:
+        "Review and update board policies in accordance with new regulations",
       assignee: { id: "3", name: "Emma Wilson", initials: "EW" },
       dueDate: "2024-12-20",
       priority: "medium",
       comments: 5,
       attachments: 3,
       tags: ["Policy", "Legal"],
-      status: "inprogress"
+      status: "inprogress",
     },
     {
       id: 4,
@@ -72,7 +83,7 @@ export default function TaskBoard() {
       comments: 2,
       attachments: 1,
       tags: ["Audit", "Charter"],
-      status: "inprogress"
+      status: "inprogress",
     },
     {
       id: 5,
@@ -84,30 +95,31 @@ export default function TaskBoard() {
       comments: 0,
       attachments: 1,
       tags: ["Minutes", "Documentation"],
-      status: "done"
+      status: "done",
     },
     {
       id: 6,
       title: "Strategic Plan Review",
-      description: "Annual review of 5-year strategic plan with recommendations",
+      description:
+        "Annual review of 5-year strategic plan with recommendations",
       assignee: { id: "1", name: "Sarah Chen", initials: "SC" },
       dueDate: "2024-12-10",
       priority: "medium",
       comments: 8,
       attachments: 4,
       tags: ["Strategy", "Planning"],
-      status: "done"
-    }
+      status: "done",
+    },
   ]);
 
   const columns = [
     { id: "todo", title: "To Do", status: "todo" as const },
     { id: "inprogress", title: "In Progress", status: "inprogress" as const },
-    { id: "done", title: "Done", status: "done" as const }
+    { id: "done", title: "Done", status: "done" as const },
   ];
 
   const getTasksByStatus = (status: Task["status"]) => {
-    return tasks.filter(task => task.status === status);
+    return tasks.filter((task) => task.status === status);
   };
 
   const getPriorityColor = (priority: Task["priority"]) => {
@@ -128,7 +140,10 @@ export default function TaskBoard() {
   };
 
   const isOverdue = (dueDate: string) => {
-    return new Date(dueDate) < new Date() && new Date(dueDate).toDateString() !== new Date().toDateString();
+    return (
+      new Date(dueDate) < new Date() &&
+      new Date(dueDate).toDateString() !== new Date().toDateString()
+    );
   };
 
   const isDueSoon = (dueDate: string) => {
@@ -141,11 +156,15 @@ export default function TaskBoard() {
 
   return (
     <div className="space-y-6">
-      <PageHeader 
-        title="Task Board" 
+      <PageHeader
+        title="Task Board"
         description="Track and manage board-related tasks and assignments"
       >
-        <Button>
+        <Button
+          onClick={() => {
+            navigate("/tasks/create");
+          }}
+        >
           <Plus className="w-4 h-4 mr-2" />
           Create Task
         </Button>
@@ -154,46 +173,57 @@ export default function TaskBoard() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {columns.map((column) => {
           const columnTasks = getTasksByStatus(column.status);
-          
+
           return (
             <div key={column.id} className="space-y-4">
               <div className="flex items-center justify-between">
                 <h3 className="font-semibold text-lg">{column.title}</h3>
                 <Badge variant="outline">{columnTasks.length}</Badge>
               </div>
-              
+
               <div className="space-y-3">
                 {columnTasks.map((task) => (
-                  <Card key={task.id} className="cursor-pointer hover:shadow-md transition-shadow">
+                  <Card
+                    key={task.id}
+                    className="cursor-pointer hover:shadow-md transition-shadow"
+                  >
                     <CardContent className="p-4 space-y-3">
                       {/* Task Header */}
                       <div className="flex items-start justify-between">
-                        <h4 className="font-medium text-sm leading-tight">{task.title}</h4>
+                        <h4 className="font-medium text-sm leading-tight">
+                          {task.title}
+                        </h4>
                         {getPriorityIcon(task.priority)}
                       </div>
-                      
+
                       {/* Description */}
                       <p className="text-xs text-muted-foreground line-clamp-2">
                         {task.description}
                       </p>
-                      
+
                       {/* Tags */}
                       <div className="flex flex-wrap gap-1">
                         {task.tags.map((tag) => (
-                          <Badge key={tag} variant="outline" className="text-xs">
+                          <Badge
+                            key={tag}
+                            variant="outline"
+                            className="text-xs"
+                          >
                             {tag}
                           </Badge>
                         ))}
                       </div>
-                      
+
                       {/* Due Date */}
-                      <div className={`flex items-center gap-1 text-xs ${
-                        isOverdue(task.dueDate) 
-                          ? "text-danger" 
-                          : isDueSoon(task.dueDate) 
-                            ? "text-warning" 
+                      <div
+                        className={`flex items-center gap-1 text-xs ${
+                          isOverdue(task.dueDate)
+                            ? "text-danger"
+                            : isDueSoon(task.dueDate)
+                            ? "text-warning"
                             : "text-muted-foreground"
-                      }`}>
+                        }`}
+                      >
                         <Calendar className="w-3 h-3" />
                         Due: {task.dueDate}
                         {isOverdue(task.dueDate) && (
@@ -201,13 +231,14 @@ export default function TaskBoard() {
                             Overdue
                           </Badge>
                         )}
-                        {isDueSoon(task.dueDate) && !isOverdue(task.dueDate) && (
-                          <Badge className="ml-1 text-xs bg-warning text-warning-foreground">
-                            Due Soon
-                          </Badge>
-                        )}
+                        {isDueSoon(task.dueDate) &&
+                          !isOverdue(task.dueDate) && (
+                            <Badge className="ml-1 text-xs bg-warning text-warning-foreground">
+                              Due Soon
+                            </Badge>
+                          )}
                       </div>
-                      
+
                       {/* Footer */}
                       <div className="flex items-center justify-between pt-2 border-t border-border">
                         <div className="flex items-center gap-2">
@@ -221,7 +252,7 @@ export default function TaskBoard() {
                             {task.assignee.name}
                           </span>
                         </div>
-                        
+
                         <div className="flex items-center gap-3 text-xs text-muted-foreground">
                           {task.comments > 0 && (
                             <span className="flex items-center gap-1">
@@ -240,10 +271,10 @@ export default function TaskBoard() {
                     </CardContent>
                   </Card>
                 ))}
-                
+
                 {/* Add Task Button */}
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   className="w-full border-dashed"
                   size="sm"
                 >
